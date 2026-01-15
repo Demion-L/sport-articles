@@ -1,20 +1,8 @@
 import type { GetServerSideProps } from "next";
-import { gql } from "@apollo/client";
-import { client } from "../lib/apollo.js";
 import Link from "next/link";
 import ArticleList from "../components/ArticleList.js";
-import type { Article, ArticlesProps } from "../types/article.js";
-
-
-const GET_ARTICLES = gql`
-  query GetArticles {
-    articles {
-      id
-      title
-      content
-    }
-  }
-`;
+import type { ArticlesProps } from "../types/article.js";
+import { fetchArticles } from "../lib/api/articles.js";
 
 export default function IndexPage({ articles }: ArticlesProps) {
   return (
@@ -33,25 +21,10 @@ export default function IndexPage({ articles }: ArticlesProps) {
   );
 }
 
+export const getServerSideProps = async () => {
+  const articles = await fetchArticles();
 
-export const getServerSideProps: GetServerSideProps<ArticlesProps> = async () => {
-  try {
-    const { data } = await client.query<{ articles: Article[] }>({
-      query: GET_ARTICLES,
-      fetchPolicy: "no-cache",
-    });
-
-    return {
-      props: {
-        articles: data?.articles || [],
-      },
-    };
-  } catch (error) {
-    console.error("Error fetching articles:", error);
-    return {
-      props: {
-        articles: [],
-      },
-    };
-  }
+  return {
+    props: { articles },
+  };
 };
