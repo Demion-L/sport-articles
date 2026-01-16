@@ -1,11 +1,14 @@
 import { gql } from "@apollo/client";
 
 export const GET_ARTICLES = gql`
-  query GetArticles {
-    articles {
-      id
-      title
-      content
+  query Articles($limit: Int!, $cursor: ID) {
+    articles(limit: $limit, cursor: $cursor) {
+      items {
+        id
+        title
+        content
+      }
+      nextCursor
     }
   }
 `;

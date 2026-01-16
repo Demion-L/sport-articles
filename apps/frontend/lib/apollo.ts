@@ -11,8 +11,13 @@ export function createApolloClient() {
         Query: {
           fields: {
             articles: {
-              merge(_, incoming) {
-                return incoming;
+              keyArgs: false,
+              merge(existing, incoming) {
+                if (!existing) return incoming;
+                return {
+                  items: [...existing.items, ...incoming.items],
+                  nextCursor: incoming.nextCursor,
+                };
               },
             },
           },

@@ -1,18 +1,20 @@
-import Link from "next/link";
-import type { ArticlesProps } from "../types/article.js";
-import { truncate } from "../lib/helpers.js";
+import usePaginatedArticles from "../lib/hooks/useArticles.js";
 
-export default function ArticleList({ articles }: ArticlesProps) {
+
+export default function ArticleList() {
+  const { articles, loading, loadMore, hasMore } = usePaginatedArticles(10);
+
   return (
-    <ul>
-      {articles.map((article) => (
-        <li key={article.id} className="mb-3 border-b pb-2">
-          <Link href={`/article/${article.id}`} className="text-xl font-semibold">
-            {article.title}
-          </Link>
-          <p>{truncate(article.content, 100)}</p>
-        </li>
+    <>
+      {articles.map((a) => (
+        <div key={a.id}>{a.title}</div>
       ))}
-    </ul>
+
+      {hasMore && (
+        <button onClick={loadMore} disabled={loading}>
+          {loading ? "Loading..." : "Load more"}
+        </button>
+      )}
+    </>
   );
 }

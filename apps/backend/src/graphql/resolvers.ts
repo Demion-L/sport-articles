@@ -1,16 +1,23 @@
+import { ArticleInput } from "../types/article";
 import { prisma } from "../prisma";
+
 
 export const resolvers = {
   Query: {
-    articles: async () => {
-      return prisma.sportsArticle.findMany({
-        where: {
-          deletedAt: null,
-        },
+    articles: async (_: any, { limit, cursor }: { limit: number; cursor?: string }) => {
+      const items = await prisma.sportsArticle.findMany({
+        take: limit + 1,
+        cursor: cursor ? { id: cursor } : undefined,
         orderBy: {
           createdAt: "desc",
         },
+        skip: cursor ? 1 : 0,
       });
+
+      const hasMore = items.length > limit;
+      if (hasMore) items.pop();
+      const nextCursor = hasMore && items.length ? items[items.length - 1].id : null;
+      return { items, nextCursor };
     },
 
     article: async (_: any, { id }: { id: string }) => {
@@ -32,7 +39,7 @@ export const resolvers = {
   Mutation: {
     createArticle: async (
       _: any,
-      { input }: { input: { title: string; content: string; imageUrl?: string } }
+      { input }: { input: ArticleInput }
     ) => {
       if (!input.title || !input.content) {
         throw new Error("Title and content are required");
@@ -52,7 +59,7 @@ export const resolvers = {
       {
         id,
         input,
-      }: { id: string; input: { title: string; content: string; imageUrl?: string } }
+      }: { id: string; input: ArticleInput }
     ) => {
       const existing = await prisma.sportsArticle.findUnique({ where: { id } });
 

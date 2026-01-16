@@ -16,8 +16,13 @@ export const typeDefs = gql`
     imageUrl: String
   }
 
+  type ArticleConnection {
+  items: [SportsArticle!]!
+  nextCursor: ID
+}
+
   type Query {
-    articles: [SportsArticle!]!
+    articles(limit: Int!, cursor: ID): ArticleConnection!
     article(id: ID!): SportsArticle
   }
 

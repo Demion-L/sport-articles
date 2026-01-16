@@ -1,8 +1,9 @@
 import type { GetServerSideProps } from "next";
 import Link from "next/link";
 import ArticleList from "../components/ArticleList.js";
-import type { ArticlesProps } from "../types/article.js";
-import { fetchArticles } from "../lib/api/articles.js";
+import type { ArticlesProps, Article } from "../types/article.js";
+import { createApolloClient } from "../lib/apollo.js";
+import { GET_ARTICLES } from "../lib/queries/articles.js";
 
 export default function IndexPage({ articles }: ArticlesProps) {
   return (
@@ -21,10 +22,18 @@ export default function IndexPage({ articles }: ArticlesProps) {
   );
 }
 
-export const getServerSideProps = async () => {
-  const articles = await fetchArticles();
+export const getServerSideProps: GetServerSideProps = async () => {
+  const client = createApolloClient();
+
+  const { data } = await client.query<{ articles: { items: Article[]; nextCursor?: string } }>({
+    query: GET_ARTICLES,
+    variables: { limit: 10 },
+  });
 
   return {
-    props: { articles },
+    props: {
+      articles: data?.articles?.items ?? [],
+      initialApolloState: client.cache.extract(),
+    },
   };
 };
