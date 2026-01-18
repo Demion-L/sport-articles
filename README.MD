@@ -65,11 +65,7 @@ pnpm install
 ```
 
 ### 2. Configure environment variables
-Create `apps/backend/.env` based on `.env.example`:
-```env
-DATABASE_URL=postgresql://postgres:postgres@localhost:5433/articles
-PORT=4000
-```
+This project does not require any environment variables to run.
 
 ### 3. Start PostgreSQL
 ```bash
