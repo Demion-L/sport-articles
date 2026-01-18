@@ -1,5 +1,5 @@
 import type { Article } from "../../types/article.js";
-import { createApolloClient } from "../apollo.js";
+import { createApolloClient } from "../createApolloClient.js";
 import { GET_ARTICLES } from "../queries/articles.js";
 
 export async function fetchArticlesRaw(): Promise<Article[]> {

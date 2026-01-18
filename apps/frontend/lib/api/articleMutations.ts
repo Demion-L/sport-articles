@@ -1,5 +1,5 @@
 import { CREATE, UPDATE, DELETE } from "../queries/articles.js";
-import { createApolloClient } from "../apollo.js";
+import { createApolloClient } from "../createApolloClient.js";
 import type { Article } from "../../types/article.js";
 
 export async function createArticle(input: Omit<Article, "id">) {

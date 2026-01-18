@@ -3,7 +3,7 @@ import { useRouter } from "next/router.js";
 import { UPDATE } from "../../../lib/queries/articles.js";
 import type { Article } from "../../../types/article.js";
 import ArticleForm from "../../../components/ArticleForm.js";
-
+import type { CreateArticleData, CreateArticleVariables } from "../../../types/article.js";
 
 type Props = {
   article: Article;
@@ -12,7 +12,7 @@ type Props = {
 export default function EditArticlePage({ article }: Props) {
   const router = useRouter();
 
-  const [updateArticle, { loading, error }] = useMutation(UPDATE);
+  const [updateArticle, { loading, error }] = useMutation<CreateArticleData, CreateArticleVariables>(UPDATE);
 
   async function handleSubmit(values: {
     title: string;
@@ -20,7 +20,6 @@ export default function EditArticlePage({ article }: Props) {
   }) {
     await updateArticle({
       variables: {
-        id: article.id,
         input: values,
       },
     });

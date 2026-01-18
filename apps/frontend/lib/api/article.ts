@@ -1,5 +1,5 @@
 import type { Article } from "../../types/article.js";
-import { createApolloClient } from "../apollo.js";
+import { createApolloClient } from "../createApolloClient.js";
 import { withRetry } from "./retry.js";
 import { getCachedArticle, setCachedArticle } from "./articleCache.js";
 import { GET_ARTICLE } from "../queries/articles.js";

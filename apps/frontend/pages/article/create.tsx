@@ -1,25 +1,49 @@
-import { useRouter } from "next/router";
-import { useState } from "react";
-import { createArticle } from "../../lib/api/articleMutations.js";
-import type { PagesRouter } from "../../types/article.js";
+import { useRouter } from "next/router.js";
+import { useMutation } from "@apollo/client/react";
 
-export default function CreatePage() {
-  const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
-  const router = useRouter() as unknown as PagesRouter;
+import ArticleForm from "../../components/ArticleForm.js";
+import { CREATE } from "../../lib/queries/articles.js";
+import type { 
+  ArticleFormValues, 
+  CreateArticleData, 
+  CreateArticleVariables 
+} from "../../types/article.js";
 
-  async function submit() {
-    if (!title || !content) return alert("Missing fields");
 
-    const article = await createArticle({ title, content });
-    (router as any).push(`/article/${article.id}`);
+
+export default function CreateArticlePage() {
+  const router = useRouter();
+
+  const [createArticle, { loading, error }] = useMutation<
+    CreateArticleData,
+    CreateArticleVariables
+  >(CREATE);
+
+  async function handleSubmit(values: ArticleFormValues) {
+    const { data } = await createArticle({
+      variables: {
+        input: values,
+      },
+    });
+
+    if (data?.createArticle?.id) {
+      router.push(`/article/${data.createArticle.id}`);
+    }
   }
 
   return (
-    <div className="p-6">
-      <input value={title} onChange={(e) => setTitle(e.target.value)} />
-      <textarea value={content} onChange={(e) => setContent(e.target.value)} />
-      <button onClick={submit}>Create</button>
+    <div className="max-w-xl mx-auto p-4">
+      <h1 className="text-2xl font-bold mb-4">Create article</h1>
+
+      {error && (
+        <p className="text-red-500 mb-2">{error.message}</p>
+      )}
+
+      <ArticleForm
+        onSubmit={handleSubmit}
+        loading={loading}
+        submitLabel="Create"
+      />
     </div>
   );
 }

@@ -1,3 +1,5 @@
+import type { createApolloClient } from "../lib/createApolloClient.js";
+
 export type Article = {
   id: string;
   title: string;
@@ -20,9 +22,17 @@ export type ArticleFormProps = {
   submitLabel?: string;
 };
 
-export type PagesRouter = { push: (url: string) => Promise<boolean> | void };
+export type CreateArticleData = {
+  createArticle: Article;
+};
+
+export type CreateArticleVariables = {
+  input: ArticleFormValues;
+};
 
 export type ArticlesQuery = { articles: { items: Article[]; nextCursor?: string } };
+
+export type ApolloClientInstance = ReturnType<typeof createApolloClient>;
 
 export interface UsePaginatedArticlesResult {
   articles: Article[];

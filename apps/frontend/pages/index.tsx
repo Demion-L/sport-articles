@@ -2,7 +2,7 @@ import type { GetServerSideProps } from "next";
 import Link from "next/link";
 import ArticleList from "../components/ArticleList.js";
 import type { ArticlesProps, Article } from "../types/article.js";
-import { createApolloClient } from "../lib/apollo.js";
+import { createApolloClient } from "../lib/createApolloClient.js";
 import { GET_ARTICLES } from "../lib/queries/articles.js";
 
 export default function IndexPage({ articles }: ArticlesProps) {
