@@ -30,6 +30,23 @@ export type CreateArticleVariables = {
   input: ArticleFormValues;
 };
 
+export type UpdateArticleVariables = {
+  id: string;
+  input: ArticleFormValues;
+};
+
+export type UpdateArticleData = {
+  updateArticle: Article;
+};
+
+export type DeleteArticleData = {
+  deleteArticle: boolean;
+};
+
+export type DeleteArticleVariables = {
+  id: string;
+};
+
 export type ArticlesQuery = { articles: { items: Article[]; nextCursor?: string } };
 
 export type ApolloClientInstance = ReturnType<typeof createApolloClient>;
